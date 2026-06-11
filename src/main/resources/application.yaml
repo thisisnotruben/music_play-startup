@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: Startup
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_HOST_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+data:
+  dataPath: ${DATA_MANIFEST_PATH}
+  storagePlaylistTarPath: ${STORAGE_PLAYLIST_TAR_PATH}
+  storageAudioTarPath: ${STORAGE_AUDIO_TAR_PATH}
+  configPath: ${SEARCH_CONFIG_PATH}
+search:
+  host: ${SEARCH_HOST}
+  port: ${SEARCH_HOST_PORT}
+  collection: ${SEARCH_COLLECTION}
+storage:
+  host: ${STORAGE_HOST}
+  hostPort: ${STORAGE_HOST_PORT}
+  regionName: ${STORAGE_REGION_NAME}
+  defaultBucket: ${STORAGE_DEFAULT_BUCKET}
+  accessKey: ${STORAGE_ACCESS_KEY}
+  secretKey: ${STORAGE_SECRET_KEY}
+  hostApiPort: ${STORAGE_HOST_API_PORT}
+  accessToken: ${STORAGE_ACCESS_TOKEN}
+  playlistBucket: ${STORAGE_PLAYLIST_BUCKET}
+  audioBucket: ${STORAGE_AUDIO_BUCKET}
