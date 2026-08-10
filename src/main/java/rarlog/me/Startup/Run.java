@@ -69,6 +69,7 @@ public class Run {
             testUser.setEmail("admin@example.com");
             testUser.setUsername("admin");
             testUser.setPassword(passwordEncoder.encode("admin123"));
+            testUser.setRefreshToken("");
             appUserRepository.save(testUser);
 
             log.info("Initing storage service");
