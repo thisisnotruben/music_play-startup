@@ -31,3 +31,5 @@ storage:
   accessToken: ${STORAGE_ACCESS_TOKEN}
   playlistBucket: ${STORAGE_PLAYLIST_BUCKET}
   audioBucket: ${STORAGE_AUDIO_BUCKET}
+auth:
+  healthCheckUrl: ${AUTH_HEALTH_CHECK_URL}

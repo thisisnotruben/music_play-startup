@@ -1,23 +1,14 @@
 package rarlog.me.Startup;
 
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.examples.Expander;
 import org.apache.commons.compress.archivers.tar.TarFile;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.client.RestClient;
 import rarlog.me.Service.SearchService;
 import rarlog.me.Startup.dto.DataDto;
 import rarlog.me.Startup.service.HealthService;
@@ -33,6 +24,14 @@ import rarlog.me.repository.ArtistRepository;
 import rarlog.me.repository.SongRepository;
 import tools.jackson.databind.ObjectMapper;
 
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -43,10 +42,10 @@ public class Run {
     private final AlbumRepository albumRepository;
     private final SongRepository songRepository;
     private final SearchService searchService;
-    private final PasswordEncoder passwordEncoder;
     private final StorageService storageService;
     private final StorageApi storageApi;
     private final HealthService healthService;
+    private final RestClient restClient;
 
     @Value("${storage.defaultBucket}")
     private String defaultBucket;
@@ -68,8 +67,6 @@ public class Run {
             testUser.setLastName("Doe");
             testUser.setEmail("admin@example.com");
             testUser.setUsername("admin");
-            testUser.setPassword(passwordEncoder.encode("admin123"));
-            testUser.setRefreshToken("");
             appUserRepository.save(testUser);
 
             log.info("Initing storage service");
@@ -142,6 +139,12 @@ public class Run {
             } else {
                 log.warn(String.format("Cannot find: [%s]", searchConfigPath));
             }
+
+            log.info("Checking auth server status");
+            boolean isAuthServiceReady;
+            do {
+                isAuthServiceReady = restClient.get().retrieve().toBodilessEntity().getStatusCode().is2xxSuccessful();
+            } while (!isAuthServiceReady);
 
             log.info("Ready");
             healthService.setReady(true);
