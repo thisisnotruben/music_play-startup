@@ -15,11 +15,9 @@ import rarlog.me.Startup.service.HealthService;
 import rarlog.me.Startup.service.StorageApi;
 import rarlog.me.Startup.service.StorageService;
 import rarlog.me.entity.Album;
-import rarlog.me.entity.AppUser;
 import rarlog.me.entity.Artist;
 import rarlog.me.entity.Song;
 import rarlog.me.repository.AlbumRepository;
-import rarlog.me.repository.AppUserRepository;
 import rarlog.me.repository.ArtistRepository;
 import rarlog.me.repository.SongRepository;
 import tools.jackson.databind.ObjectMapper;
@@ -37,7 +35,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Run {
 
-    private final AppUserRepository appUserRepository;
     private final ArtistRepository artistRepository;
     private final AlbumRepository albumRepository;
     private final SongRepository songRepository;
@@ -60,14 +57,6 @@ public class Run {
             @Value("${data.storageAudioTarPath}") String storageAudioTarPath,
             @Value("${data.configPath}") String searchConfigPath) {
         return (args) -> {
-
-            log.info("Creating test user");
-            AppUser testUser = new AppUser();
-            testUser.setFirstName("John");
-            testUser.setLastName("Doe");
-            testUser.setEmail("admin@example.com");
-            testUser.setUsername("admin");
-            appUserRepository.save(testUser);
 
             log.info("Initing storage service");
             boolean isReady = false;
