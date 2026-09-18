@@ -33,3 +33,7 @@ storage:
   audioBucket: ${STORAGE_AUDIO_BUCKET}
 auth:
   healthCheckUrl: ${AUTH_HEALTH_CHECK_URL}
+  apiUrl: ${AUTH_API_URL}
+  apiUsername: ${AUTH_ADMIN_USERNAME}
+  apiPassword: ${AUTH_ADMIN_PASSWORD}
+  realm: ${AUTH_REALM}

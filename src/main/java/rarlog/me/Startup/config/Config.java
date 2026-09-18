@@ -1,5 +1,10 @@
 package rarlog.me.Startup.config;
 
+import io.minio.MinioClient;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.HttpUrl;
+import org.keycloak.admin.client.Keycloak;
 import org.openapitools.client.ApiClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -7,11 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-
-import io.minio.MinioClient;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import okhttp3.HttpUrl;
 import org.springframework.web.client.RestClient;
 import rarlog.me.Service.SearchService;
 import rarlog.me.Startup.service.StorageApi;
@@ -84,6 +84,11 @@ public class Config {
         return RestClient.builder()
                 .baseUrl(healthCheckUrl)
                 .build();
+    }
+
+    @Bean
+    public Keycloak keycloak(@Value("${auth.apiUrl}") String apiUrl, @Value("${auth.apiUsername}") String username, @Value("${auth.apiPassword}") String password) {
+        return Keycloak.getInstance(apiUrl, "master", username, password, "admin-cli");
     }
 
 }

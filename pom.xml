@@ -137,6 +137,13 @@
             <artifactId>GarageApi</artifactId>
             <version>v2.3.0</version>
         </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.keycloak/keycloak-admin-client -->
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>26.0.12</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
