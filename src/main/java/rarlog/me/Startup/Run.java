@@ -18,14 +18,8 @@ import rarlog.me.Startup.dto.DataDto;
 import rarlog.me.Startup.service.HealthService;
 import rarlog.me.Startup.service.StorageApi;
 import rarlog.me.Startup.service.StorageService;
-import rarlog.me.entity.Album;
-import rarlog.me.entity.Artist;
-import rarlog.me.entity.Song;
-import rarlog.me.entity.UtilStartup;
-import rarlog.me.repository.AlbumRepository;
-import rarlog.me.repository.ArtistRepository;
-import rarlog.me.repository.SongRepository;
-import rarlog.me.repository.UtilStartupRepository;
+import rarlog.me.entity.*;
+import rarlog.me.repository.*;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.FileInputStream;
@@ -42,6 +36,7 @@ import java.util.List;
 public class Run {
 
     private final UtilStartupRepository utilStartupRepository;
+    private final AppUserRepository appUserRepository;
     private final ArtistRepository artistRepository;
     private final AlbumRepository albumRepository;
     private final SongRepository songRepository;
@@ -168,12 +163,17 @@ public class Run {
                 } while (!isAuthServiceReady);
 
                 log.info("Creating demo user");
+                String username = "guest";
+                String firstName = "John";
+                String lastName = "Doe";
+                String email = "guest@mail.com";
+
                 UserRepresentation userRepresentation = new UserRepresentation();
-                userRepresentation.setUsername("guest");
-                userRepresentation.setEmail("guest@mail.com");
+                userRepresentation.setUsername(username);
+                userRepresentation.setEmail(email);
                 userRepresentation.setEmailVerified(true);
-                userRepresentation.setFirstName("John");
-                userRepresentation.setLastName("Doe");
+                userRepresentation.setFirstName(firstName);
+                userRepresentation.setLastName(lastName);
                 userRepresentation.setEnabled(true);
 
                 CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
@@ -182,6 +182,14 @@ public class Run {
                 userRepresentation.setCredentials(List.of(credentialRepresentation));
 
                 keycloak.realm(authRealm).users().create(userRepresentation);
+                UserRepresentation demoAuthUser = keycloak.realm(authRealm).users().searchByUsername(username, true).getFirst();
+
+                appUserRepository.save(AppUser.builder()
+                        .userId(demoAuthUser.getId())
+                        .email(email)
+                        .firstName(firstName)
+                        .lastName(lastName)
+                        .build());
 
                 utilStartup.setAuthInit(true);
             }
